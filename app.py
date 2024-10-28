@@ -34,6 +34,12 @@ def create_app():
         db.init_app(app)
         logger.info("Database initialized")
         
+        # Register context processor for templates
+        @app.context_processor
+        def utility_processor():
+            """Add utility functions to template context."""
+            return dict(now=datetime.utcnow())
+        
         # Register blueprints
         logger.info("Registering blueprints")
         try:
