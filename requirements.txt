@@ -24,8 +24,8 @@ numpy==1.26.2
 pdfplumber==0.10.3
 openai==1.3.5
 
-# Task scheduling
-APScheduler==3.10.4
+# Storage
+cloudinary==1.36.0
 
 # Utilities
 python-dotenv==1.0.0
