@@ -2,19 +2,22 @@
     "version": 2,
     "builds": [
         {
-            "src": "wsgi.py",
+            "src": "app.py",
             "use": "@vercel/python",
             "config": {
                 "maxLambdaSize": "15mb",
-                "runtime": "python3.9",
-                "installCommand": "pip install -r requirements.txt"
+                "runtime": "python3.9"
             }
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "wsgi.py"
+            "dest": "app.py"
         }
-    ]
+    ],
+    "env": {
+        "FLASK_APP": "app.py",
+        "FLASK_ENV": "production"
+    }
 }
