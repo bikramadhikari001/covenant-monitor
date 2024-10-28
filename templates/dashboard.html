@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Covenant Monitor{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Projects Section -->
+    <section class="dashboard-section">
+        <div class="section-header">
+            <h2>Projects</h2>
+        </div>
+        
+        {% if projects %}
+        <div class="projects-grid">
+            {% for project in projects %}
+            <a href="{{ url_for('document_bp.project_detail', project_id=project.id) }}" class="project-card">
+                <div class="project-header">
+                    <h3>{{ project.name }}</h3>
+                    <span class="project-date">Created {{ project.created_at | datetime }}</span>
+                </div>
+                <p class="project-description">{{ project.description or 'No description provided.' }}</p>
+                <div class="project-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Documents</span>
+                        <span class="stat-value">{{ project.documents | length }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Covenants</span>
+                        <span class="stat-value">{{ project.documents | map(attribute='covenants') | map('length') | sum }}</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-folder-open"></i>
+            </div>
+            <h3>No Projects Yet</h3>
+            <p>Create your first project to start monitoring covenants.</p>
+            <button onclick="showNewProjectModal()" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                Create Project
+            </button>
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- Overview Section -->
+    <section class="dashboard-section overview-section">
+        <div class="section-header">
+            <h2>Overview</h2>
+            <div class="date-range">
+                <button class="btn btn-outline active">Today</button>
+                <button class="btn btn-outline">Week</button>
+                <button class="btn btn-outline">Month</button>
+                <button class="btn btn-outline">Quarter</button>
+            </div>
+        </div>
+        <div class="overview-grid">
+            <div class="stat-card">
+                <div class="stat-icon success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Compliant</h3>
+                    <div class="stat-value">42</div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 8% from last month
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Warnings</h3>
+                    <div class="stat-value">7</div>
+                    <div class="stat-trend negative">
+                        <i class="fas fa-arrow-up"></i> 3% from last month
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon danger">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Breaches</h3>
+                    <div class="stat-value">2</div>
+                    <div class="stat-trend">
+                        No change from last month
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon info">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Pending Review</h3>
+                    <div class="stat-value">5</div>
+                    <div class="stat-trend negative">
+                        <i class="fas fa-arrow-up"></i> 2 new this week
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Activity Section -->
+    <section class="dashboard-section">
+        <div class="section-header">
+            <h2>Recent Activity</h2>
+            <button class="btn btn-outline">View All</button>
+        </div>
+        <div class="activity-list">
+            <div class="activity-item">
+                <div class="activity-icon warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>Leverage Ratio Warning</h4>
+                    <p>Current value (3.2) approaching threshold (3.5)</p>
+                    <time>2 hours ago</time>
+                </div>
+                <button class="btn btn-outline">Review</button>
+            </div>
+            <div class="activity-item">
+                <div class="activity-icon success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>Interest Coverage Ratio Update</h4>
+                    <p>Ratio improved to 4.2 (threshold: 3.0)</p>
+                    <time>5 hours ago</time>
+                </div>
+                <button class="btn btn-outline">View</button>
+            </div>
+            <div class="activity-item">
+                <div class="activity-icon info">
+                    <i class="fas fa-file-upload"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>New Document Added</h4>
+                    <p>Tech Innovations Inc. - Term Loan Agreement</p>
+                    <time>1 day ago</time>
+                </div>
+                <button class="btn btn-outline">Open</button>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.dashboard-container {
+    max-width: var(--container-max-width);
+    margin: 40px auto;
+    padding: 0 24px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.section-header h2 {
+    font-size: 24px;
+    color: var(--text-dark);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 48px;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+.empty-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--background-color);
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 32px;
+    color: var(--text-light);
+}
+
+.empty-state h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+}
+
+.empty-state p {
+    color: var(--text-light);
+    margin-bottom: 24px;
+}
+
+.project-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-normal);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.project-card:hover {
+    transform: translateY(-2px);
+}
+
+.project-header {
+    margin-bottom: 16px;
+}
+
+.project-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.project-date {
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.project-description {
+    color: var(--text-light);
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.project-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 16px;
+    background: var(--background-color);
+    border-radius: 8px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+@media (max-width: 768px) {
+    .project-card {
+        margin-bottom: 16px;
+    }
+    
+    .project-stats {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

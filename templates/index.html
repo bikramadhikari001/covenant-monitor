@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Covenant Monitor - AI-Powered Financial Compliance{% endblock %}
+
+{% block content %}
+<div class="landing-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-shield-alt"></i> Trusted by 500+ Financial Institutions
+            </div>
+            <h1>Automate Your<br>Covenant Monitoring</h1>
+            <p class="hero-subtitle">
+                Streamline compliance tracking with AI-powered analysis, real-time monitoring, and intelligent alerts.
+            </p>
+            <div class="hero-cta">
+                <a href="{{ url_for('auth_bp.login') }}" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i> Start Free Trial
+                </a>
+                <button class="btn btn-secondary" id="watchDemoBtn">
+                    <i class="fas fa-play-circle"></i> Watch Demo
+                </button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number" data-value="98" data-format="percentage">0%</span>
+                    <span class="stat-label">Accuracy Rate</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-value="80" data-format="percentage">0%</span>
+                    <span class="stat-label">Time Saved</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-value="10" data-format="plus">0+</span>
+                    <span class="stat-label">Million Covenants</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>AI-Powered Analysis</h3>
+                <p>Extract and categorize covenant terms with industry-leading accuracy</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check"></i> Advanced NLP Processing</li>
+                    <li><i class="fas fa-check"></i> Automated Data Extraction</li>
+                    <li><i class="fas fa-check"></i> Smart Classification</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Real-time Monitoring</h3>
+                <p>Track compliance with live data integration and instant updates</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check"></i> Live Data Integration</li>
+                    <li><i class="fas fa-check"></i> Custom Dashboards</li>
+                    <li><i class="fas fa-check"></i> Performance Analytics</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <h3>Intelligent Alerts</h3>
+                <p>Stay ahead with predictive warnings and customizable notifications</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check"></i> Early Warning System</li>
+                    <li><i class="fas fa-check"></i> Custom Alert Rules</li>
+                    <li><i class="fas fa-check"></i> Multi-channel Delivery</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works-section">
+        <h2>How It Works</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Upload Documents</h3>
+                <p>Simply upload your loan or bond documents. Our AI will handle the rest.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Automatic Analysis</h3>
+                <p>GPT-4 extracts and categorizes all covenants and requirements.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Real-time Tracking</h3>
+                <p>Monitor compliance with automated data updates and alerts.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Transform Your<br>Compliance Process</h2>
+            <p>Join leading financial institutions in modernizing covenant monitoring</p>
+            <div class="cta-buttons">
+                <a href="{{ url_for('auth_bp.login') }}" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i> Start Free Trial
+                </a>
+                <button class="btn btn-secondary" id="scheduleDemoBtn">
+                    <i class="fas fa-calendar"></i> Schedule Demo
+                </button>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

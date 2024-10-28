@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}Alerts - Covenant Monitor{% endblock %}
+
+{% block content %}
+<div class="alerts-container">
+    <div class="alerts-header">
+        <h1>Covenant Alerts</h1>
+        <p>Monitor and manage covenant compliance alerts</p>
+    </div>
+
+    <div class="alerts-grid">
+        {% for alert in alerts %}
+        <div class="alert-card" data-alert-id="{{ alert.id }}">
+            <div class="alert-card-header">
+                <div class="alert-type {{ alert.alert_type }}">
+                    {{ alert.alert_type|replace('_', ' ')|title }}
+                </div>
+                <button class="dismiss-btn" onclick="dismissAlert({{ alert.id }})">
+                    <span>&times;</span>
+                </button>
+            </div>
+            
+            <div class="alert-card-content">
+                <h4>{{ alert.covenant.name }}</h4>
+                <p class="alert-message">{{ alert.message }}</p>
+                <div class="alert-meta">
+                    <span class="alert-time">{{ alert.created_at|datetime }}</span>
+                    <a href="{{ url_for('document_bp.view_document', id=alert.covenant.document_id) }}" 
+                       class="view-document-link">View Document</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="no-alerts">
+            <div class="no-alerts-icon">🔔</div>
+            <h3>No Active Alerts</h3>
+            <p>You're all caught up! There are no active alerts at this time.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.alerts-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.alerts-header {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.alerts-header h1 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: -0.5px;
+}
+
+.alerts-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.alerts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.alert-card {
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.alert-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alert-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--background-color);
+    border-bottom: 1px solid var(--accent-color);
+}
+
+.alert-type {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.alert-type.status_change {
+    background-color: var(--warning-color);
+    color: var(--text-color);
+}
+
+.alert-type.review_date {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.alert-type.breach {
+    background-color: var(--danger-color);
+    color: var(--white);
+}
+
+.dismiss-btn {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.dismiss-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--danger-color);
+}
+
+.alert-card-content {
+    padding: 1.5rem;
+}
+
+.alert-card-content h4 {
+    color: var(--primary-color);
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.alert-message {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.alert-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.alert-time {
+    color: #888;
+}
+
+.view-document-link {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.view-document-link:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.no-alerts {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.no-alerts-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
+}
+
+.no-alerts h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.no-alerts p {
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .alerts-container {
+        padding: 1rem;
+    }
+    
+    .alerts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .alerts-header {
+        padding: 1.5rem;
+    }
+    
+    .alerts-header h1 {
+        font-size: 1.75rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function dismissAlert(alertId) {
+    fetch(`/alerts/dismiss/${alertId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const alertCard = document.querySelector(`[data-alert-id="${alertId}"]`);
+        if (alertCard) {
+            alertCard.style.animation = 'fadeOut 0.3s ease forwards';
+            setTimeout(() => {
+                alertCard.remove();
+                
+                // Check if there are any remaining alerts
+                const remainingAlerts = document.querySelectorAll('.alert-card');
+                if (remainingAlerts.length === 0) {
+                    const alertsGrid = document.querySelector('.alerts-grid');
+                    alertsGrid.innerHTML = `
+                        <div class="no-alerts">
+                            <div class="no-alerts-icon">🔔</div>
+                            <h3>No Active Alerts</h3>
+                            <p>You're all caught up! There are no active alerts at this time.</p>
+                        </div>
+                    `;
+                }
+            }, 300);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+{% endblock %}

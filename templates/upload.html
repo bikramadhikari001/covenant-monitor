@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Document - Covenant Monitor{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+    <div class="upload-card">
+        <h1>Upload Document</h1>
+        <p class="upload-description">Upload your loan agreements or bond documents for covenant extraction.</p>
+        
+        <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+            {% if not project_id %}
+            <div class="form-group">
+                <label for="project">Select Project</label>
+                <select name="project_id" id="project" class="form-select" required>
+                    <option value="">Choose a project...</option>
+                    {% for project in projects %}
+                    <option value="{{ project.id }}">{{ project.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% else %}
+            <input type="hidden" name="project_id" value="{{ project_id }}">
+            {% endif %}
+            
+            <div class="file-upload-area" id="dropZone">
+                <input type="file" name="file" id="file" class="file-input" accept=".pdf,.doc,.docx" required>
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="upload-text">
+                    <p>Drag and drop your file here or</p>
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('file').click()">
+                        Browse Files
+                    </button>
+                </div>
+                <p class="file-info">Maximum file size: 16MB</p>
+                <p class="file-types">Supported formats: PDF, DOC, DOCX</p>
+            </div>
+            
+            <div id="filePreview" class="file-preview" style="display: none;">
+                <div class="selected-file">
+                    <i class="fas fa-file-alt"></i>
+                    <span id="fileName">No file selected</span>
+                    <button type="button" class="btn-remove" onclick="removeFile()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary upload-button">
+                <i class="fas fa-upload"></i> Upload Document
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.upload-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.upload-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: var(--shadow-sm);
+}
+
+.upload-card h1 {
+    font-size: 32px;
+    margin-bottom: 16px;
+    color: var(--text-dark);
+}
+
+.upload-description {
+    color: var(--text-light);
+    margin-bottom: 32px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    color: var(--text-dark);
+}
+
+.file-upload-area {
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    transition: all var(--transition-normal);
+    margin-bottom: 24px;
+}
+
+.file-upload-area.dragover {
+    border-color: var(--primary-color);
+    background: rgba(44, 82, 130, 0.05);
+}
+
+.file-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-icon {
+    font-size: 48px;
+    color: var(--primary-color);
+    margin-bottom: 16px;
+}
+
+.upload-text {
+    margin-bottom: 16px;
+}
+
+.upload-text p {
+    margin-bottom: 8px;
+    color: var(--text-light);
+}
+
+.file-info,
+.file-types {
+    font-size: 14px;
+    color: var(--text-light);
+    margin: 4px 0;
+}
+
+.file-preview {
+    background: var(--background-color);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.selected-file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.selected-file i {
+    font-size: 24px;
+    color: var(--primary-color);
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 4px;
+    margin-left: auto;
+}
+
+.btn-remove:hover {
+    color: var(--error);
+}
+
+.upload-button {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .upload-container {
+        margin: 20px auto;
+    }
+    
+    .upload-card {
+        padding: 24px;
+    }
+    
+    .file-upload-area {
+        padding: 24px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('uploadForm');
+    if (!form) return;  // Exit if form doesn't exist
+    
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('file');
+    const filePreview = document.getElementById('filePreview');
+    const fileName = document.getElementById('fileName');
+    
+    if (dropZone && fileInput) {  // Only add listeners if elements exist
+        // Handle drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                updateFilePreview();
+            }
+        });
+        
+        // Handle file selection
+        fileInput.addEventListener('change', updateFilePreview);
+    }
+    
+    function updateFilePreview() {
+        if (fileInput.files.length && filePreview && fileName) {
+            fileName.textContent = fileInput.files[0].name;
+            filePreview.style.display = 'block';
+        } else if (filePreview) {
+            filePreview.style.display = 'none';
+        }
+    }
+});
+
+function removeFile() {
+    const fileInput = document.getElementById('file');
+    const filePreview = document.getElementById('filePreview');
+    
+    if (fileInput && filePreview) {
+        fileInput.value = '';
+        filePreview.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

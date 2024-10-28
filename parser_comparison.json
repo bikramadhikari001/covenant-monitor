@@ -1,0 +1,196 @@
+{
+  "timestamp": "2024-10-28T19:27:45.535633",
+  "mock_results": {
+    "covenants": [
+      {
+        "type": "leverage_ratio",
+        "threshold_value": 3.5,
+        "description": "The Borrower shall maintain a Leverage Ratio not exceeding 3.5:1.0",
+        "measurement_frequency": "quarterly"
+      },
+      {
+        "type": "interest_coverage_ratio",
+        "threshold_value": 3.0,
+        "description": "The Borrower shall maintain an Interest Coverage Ratio of not less than 3.0:1.0",
+        "measurement_frequency": "quarterly"
+      },
+      {
+        "type": "minimum_liquidity",
+        "threshold_value": 10000000,
+        "description": "The Borrower shall maintain minimum Liquidity of not less than USD 10,000,000",
+        "measurement_frequency": "continuous"
+      },
+      {
+        "type": "capital_expenditures",
+        "threshold_value": 25000000,
+        "description": "The Borrower shall not make or commit to make capital expenditures exceeding USD 25,000,000 in any fiscal year",
+        "measurement_frequency": "annually"
+      },
+      {
+        "type": "distributions",
+        "threshold_value": 2.75,
+        "description": "The Borrower shall not declare or pay dividends if the Leverage Ratio exceeds 2.75:1.0",
+        "measurement_frequency": "quarterly"
+      },
+      {
+        "type": "additional_indebtedness",
+        "threshold_value": 10000000,
+        "description": "The Borrower shall not incur additional indebtedness exceeding USD 10,000,000 without prior consent",
+        "measurement_frequency": "continuous"
+      }
+    ],
+    "metadata": {
+      "document_type": "loan_agreement",
+      "parties": [
+        "TECH INNOVATIONS INC.",
+        "FIRST NATIONAL BANK",
+        "THE LENDERS"
+      ],
+      "processed_at": "2024-10-28T19:27:13.369550",
+      "effective_date": "2024-10-28"
+    },
+    "dates": [
+      {
+        "type": "effective_date",
+        "date": "2024-10-28",
+        "context": "Agreement date"
+      },
+      {
+        "type": "first_measurement",
+        "date": "2024-12-31",
+        "context": "First measurement date"
+      }
+    ]
+  },
+  "openai_results": {
+    "covenants": [
+      {
+        "type": "leverage_ratio",
+        "threshold": [
+          {
+            "value": 3.5,
+            "conditions": "for any fiscal quarter ending during the period from the Closing Date through December 31, 2024"
+          },
+          {
+            "value": 3.25,
+            "conditions": "for any fiscal quarter ending during the period from January 1, 2025, through December 31, 2025"
+          },
+          {
+            "value": 3,
+            "conditions": "for any fiscal quarter thereafter"
+          }
+        ],
+        "description": "The Borrower shall maintain a Leverage Ratio not exceeding the specified values for the given periods.",
+        "measurement_frequency": "not specified",
+        "calculation_method": "Total Debt / Consolidated EBITDA for the trailing twelve months",
+        "thresholds": [
+          {
+            "value": 3.5,
+            "conditions": "for any fiscal quarter ending during the period from the Closing Date through December 31, 2024"
+          },
+          {
+            "value": 3.25,
+            "conditions": "for any fiscal quarter ending during the period from January 1, 2025, through December 31, 2025"
+          },
+          {
+            "value": 3,
+            "conditions": "for any fiscal quarter thereafter"
+          }
+        ],
+        "threshold_value": 3.5
+      },
+      {
+        "type": "interest_coverage_ratio",
+        "threshold": 3,
+        "description": "The Borrower shall maintain an Interest Coverage Ratio of not less than 3.00:1.00 as of the end of any fiscal quarter.",
+        "measurement_frequency": "not specified",
+        "calculation_method": "Consolidated EBITDA / Interest Expense",
+        "threshold_value": 3,
+        "thresholds": [
+          {
+            "value": 3
+          }
+        ]
+      },
+      {
+        "type": "minimum_liquidity",
+        "threshold": 10000000,
+        "description": "The Borrower shall maintain minimum Liquidity of not less than USD 10,000,000 at all times.",
+        "measurement_frequency": "not specified",
+        "calculation_method": "Not specified",
+        "threshold_value": 10000000,
+        "thresholds": [
+          {
+            "value": 10000000
+          }
+        ]
+      },
+      {
+        "type": "capital_expenditures",
+        "threshold": 25000000,
+        "description": "The Borrower shall not make or commit to make capital expenditures in any fiscal year exceeding USD 25,000,000 in aggregate.",
+        "measurement_frequency": "not specified",
+        "calculation_method": "Not specified",
+        "threshold_value": 25000000,
+        "thresholds": [
+          {
+            "value": 25000000
+          }
+        ]
+      },
+      {
+        "type": "distributions",
+        "threshold": {
+          "value": 2.75,
+          "conditions": "The Borrower shall not declare or pay any dividends or make any distributions on its capital stock if the Leverage Ratio exceeds 2.75:1.00."
+        },
+        "description": "The Borrower shall not declare or pay any dividends or make any distributions on its capital stock if the Leverage Ratio exceeds 2.75:1.00.",
+        "measurement_frequency": "not specified",
+        "calculation_method": "Not specified",
+        "thresholds": [
+          {
+            "value": 2.75,
+            "conditions": "The Borrower shall not declare or pay any dividends or make any distributions on its capital stock if the Leverage Ratio exceeds 2.75:1.00."
+          }
+        ],
+        "threshold_value": 2.75
+      },
+      {
+        "type": "additional_indebtedness",
+        "threshold": 10000000,
+        "description": "The Borrower shall not incur additional indebtedness exceeding USD 10,000,000 in aggregate without prior written consent from the Administrative Agent.",
+        "measurement_frequency": "not specified",
+        "calculation_method": "Not specified",
+        "threshold_value": 10000000,
+        "thresholds": [
+          {
+            "value": 10000000
+          }
+        ]
+      }
+    ],
+    "dates": [],
+    "metadata": {
+      "document_type": "loan agreement",
+      "parties": [
+        "TECH INNOVATIONS INC.",
+        "FIRST NATIONAL BANK",
+        "THE LENDERS listed in Schedule A"
+      ],
+      "processed_at": "2024-10-28T19:27:45.535063"
+    },
+    "raw_text": "SYNDICATED LOAN AGREEMENT\nTHIS SYNDICATED LOAN AGREEMENT (this \"Agreement\") is made and entered into as of\nOctober 28, 2024, by and among:\nTECH INNOVATIONS INC., a Delaware corporation, having its principal place of business at\n123 Innovation Drive, San Francisco, CA 94105 (the \"Borrower\");\nFIRST NATIONAL BANK, as Administrative Agent and Lead Arranger (the \"Administrative\nAgent\"); and\nTHE LENDERS listed in Schedule A hereto (collectively, the \"Lenders\").\nARTICLE I: DEFINITIONS\n1.1 \"Consolidated EBITDA\" means, for any period, consolidated net income plus interest\nexpense, income tax expense, depreciation, and amortization.\n1.2 \"Leverage Ratio\" means, as of any date of determination, the ratio of (a) Total Debt to (b)\nConsolidated EBITDA for the trailing twelve months.\n1.3 \"Interest Coverage Ratio\" means the ratio of (a) Consolidated EBITDA to (b) Interest\nExpense.\nARTICLE II: THE CREDITS\n2.1 The Lenders hereby establish a revolving credit facility in favor of the Borrower in the\naggregate principal amount of USD 50,000,000 (the \"Facility\").\n2.2 Interest Rate: SOFR + 2.50% per annum\nARTICLE III: FINANCIAL COVENANTS\nThe Borrower covenants and agrees that, so long as any Commitment is in effect and until\npayment in full of all Obligations:\n3.1 Leverage Ratio: The Borrower shall maintain a Leverage Ratio not exceeding:\n- 3.50:1.00 for any fiscal quarter ending during the period from the Closing Date through\nDecember 31, 2024- 3.25:1.00 for any fiscal quarter ending during the period from January 1, 2025, through\nDecember 31, 2025\n- 3.00:1.00 for any fiscal quarter thereafter\n3.2 Interest Coverage Ratio: The Borrower shall maintain an Interest Coverage Ratio of not\nless than 3.00:1.00 as of the end of any fiscal quarter.\n3.3 Minimum Liquidity: The Borrower shall maintain minimum Liquidity of not less than USD\n10,000,000 at all times.\nARTICLE IV: NEGATIVE COVENANTS\nThe Borrower covenants that it shall not, directly or indirectly:\n4.1 Capital Expenditures: Make or commit to make capital expenditures in any fiscal year\nexceeding USD 25,000,000 in aggregate.\n4.2 Distributions: Declare or pay any dividends or make any distributions on its capital stock if\nthe Leverage Ratio exceeds 2.75:1.00.\n4.3 Additional Indebtedness: Incur additional indebtedness exceeding USD 10,000,000 in\naggregate without prior written consent from the Administrative Agent.\nARTICLE V: REPORTING REQUIREMENTS\n5.1 The Borrower shall furnish to the Administrative Agent:\n(a) Within 45 days after the end of each fiscal quarter: - Consolidated financial statements -\nCalculation of all financial covenants - Compliance certificate signed by the CFO\n(b) Within 90 days after the end of each fiscal year: - Audited annual financial statements -\nIndependent auditor's report - Annual budget and projections\n5.2 The Borrower shall promptly notify the Administrative Agent of any Default or Event of\nDefault.\nARTICLE VI: EVENTS OF DEFAULT\n6.1 Each of the following shall constitute an Event of Default:\n(a) Failure to pay principal, interest, or any other amount when due (b) Breach of any financial\ncovenant (c) Breach of any negative covenant (d) Material misrepresentation (e) Cross-default\nto other material indebtedness (f) Bankruptcy or insolvencyIN WITNESS WHEREOF, the parties hereto have caused this Agreement to be executed as of\nthe date first written above.\nTECH INNOVATIONS INC. By: _______________________ Name: Sarah Johnson Title: Chief\nFinancial Officer\nFIRST NATIONAL BANK, as Administrative Agent By: _______________________ Name:\nMichael Chen Title: Senior Vice President\n[LENDER SIGNATURES FOLLOW]\nSchedule A: Lenders\n1. First National Bank - $20,000,000\n2. Pacific Western Bank - $15,000,000\n3. Silicon Valley Credit Union - $15,000,000"
+  },
+  "analysis": {
+    "common_types": [
+      "leverage_ratio",
+      "additional_indebtedness",
+      "minimum_liquidity",
+      "capital_expenditures",
+      "distributions",
+      "interest_coverage_ratio"
+    ],
+    "mock_only": [],
+    "openai_only": []
+  }
+}

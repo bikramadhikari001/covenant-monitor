@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}Processing Document - Covenant Monitor{% endblock %}
+
+{% block content %}
+<div class="process-container">
+    <div class="process-header">
+        <h1>Document Processing</h1>
+        <div class="document-info">
+            <span class="document-name">{{ document.filename }}</span>
+            <span class="document-project">Project: {{ document.project.name }}</span>
+            <span class="document-status {{ document.processing_status }}">
+                Status: {{ document.processing_status | title }}
+            </span>
+        </div>
+    </div>
+
+    <div class="covenants-section">
+        <h2>Extracted Covenants</h2>
+        <div class="covenants-grid">
+            {% for covenant in document.covenants %}
+            <div class="covenant-card">
+                <div class="covenant-header">
+                    <h3>{{ covenant.name }}</h3>
+                    <span class="covenant-status {{ covenant.compliance_status }}">
+                        {{ covenant.compliance_status | title }}
+                    </span>
+                </div>
+                
+                <div class="covenant-details">
+                    <div class="detail-item">
+                        <label>Threshold Value:</label>
+                        <span>{{ covenant.threshold_value | format_number }}</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <label>Current Value:</label>
+                        <span>{{ covenant.current_value | format_number if covenant.current_value else 'Not set' }}</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <label>Frequency:</label>
+                        <span>{{ covenant.measurement_frequency | title }}</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <label>Next Review:</label>
+                        <span>{{ covenant.next_review_date | datetime if covenant.next_review_date else 'Not scheduled' }}</span>
+                    </div>
+                </div>
+                
+                <div class="covenant-description">
+                    <p>{{ covenant.description }}</p>
+                </div>
+                
+                <div class="covenant-actions">
+                    <button class="btn btn-outline" onclick="editCovenant({{ covenant.id }})">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-outline" onclick="viewHistory({{ covenant.id }})">
+                        <i class="fas fa-history"></i> History
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="process-actions">
+        <button class="btn btn-primary" onclick="location.href='{{ url_for('dashboard_bp.dashboard') }}'">
+            <i class="fas fa-check"></i> Complete Processing
+        </button>
+        <button class="btn btn-outline" onclick="location.href='{{ url_for('document_bp.upload') }}'">
+            <i class="fas fa-upload"></i> Upload Another Document
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.process-container {
+    max-width: var(--container-max-width);
+    margin: 40px auto;
+    padding: 0 24px;
+}
+
+.process-header {
+    margin-bottom: 40px;
+}
+
+.process-header h1 {
+    font-size: 32px;
+    margin-bottom: 16px;
+}
+
+.document-info {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.document-name {
+    font-weight: 600;
+}
+
+.document-project {
+    color: var(--text-light);
+}
+
+.document-status {
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.document-status.pending { background: var(--warning); color: var(--white); }
+.document-status.processing { background: var(--primary-color); color: var(--white); }
+.document-status.completed { background: var(--success); color: var(--white); }
+.document-status.error { background: var(--error); color: var(--white); }
+
+.covenants-section {
+    margin-bottom: 40px;
+}
+
+.covenants-section h2 {
+    font-size: 24px;
+    margin-bottom: 24px;
+}
+
+.covenants-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 24px;
+}
+
+.covenant-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+}
+
+.covenant-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.covenant-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.covenant-status {
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.covenant-status.compliant { background: rgba(56, 161, 105, 0.1); color: var(--success); }
+.covenant-status.warning { background: rgba(221, 107, 32, 0.1); color: var(--warning); }
+.covenant-status.breach { background: rgba(229, 62, 62, 0.1); color: var(--error); }
+.covenant-status.pending { background: rgba(49, 130, 206, 0.1); color: var(--primary-color); }
+
+.covenant-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-item label {
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.covenant-description {
+    color: var(--text-light);
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.covenant-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.process-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .covenants-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .covenant-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .document-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .process-actions {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function editCovenant(id) {
+    // TODO: Implement covenant editing
+    console.log('Edit covenant:', id);
+}
+
+function viewHistory(id) {
+    // TODO: Implement covenant history view
+    console.log('View history:', id);
+}
+</script>
+{% endblock %}
