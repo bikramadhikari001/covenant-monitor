@@ -6,7 +6,8 @@
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
-        "runtime": "python3.12"
+        "runtime": "python3.12",
+        "pip": ["sqlalchemy-sqlitecloud", "sqlitecloud"]
       }
     }
   ],
@@ -22,5 +23,5 @@
     "FLASK_APP": "app.py",
     "DATABASE_URL": "sqlite+sqlitecloud://nujaxhhmhk.sqlite.cloud:8860/covenant?apikey=qoGc7qTB8j3ojaVCn1MPCxi1BfXwpSpFuj1Tl59AoyM"
   },
-  "buildCommand": "pip install sqlalchemy-sqlitecloud sqlitecloud && mkdir -p instance uploads"
+  "buildCommand": "mkdir -p instance uploads"
 }
