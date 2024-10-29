@@ -1,36 +1,39 @@
-"""Application configuration."""
+"""Configuration module."""
 import os
 from datetime import timedelta
 
-# Base directory
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-
-# Secret key
-SECRET_KEY = os.getenv('SECRET_KEY', 'dev')
-
-# Database
-SQLALCHEMY_DATABASE_URI = os.getenv(
-    'DATABASE_URL',
-    f'sqlite:///{os.path.join(BASE_DIR, "instance", "covenant.db")}'
-)
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-# File upload
-UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
-ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}
-MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
-
-# Auth0 configuration
-AUTH0_CLIENT_ID = os.getenv('AUTH0_CLIENT_ID', 'your-auth0-client-id')
-AUTH0_CLIENT_SECRET = os.getenv('AUTH0_CLIENT_SECRET', 'your-auth0-client-secret')
-AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN', 'your-auth0-domain.auth0.com')
-AUTH0_BASE_URL = f'https://{AUTH0_DOMAIN}'
-AUTH0_AUDIENCE = os.getenv('AUTH0_AUDIENCE', f'https://{AUTH0_DOMAIN}/api/v2/')
-
-# Session configuration
-PERMANENT_SESSION_LIFETIME = timedelta(hours=24)
-SESSION_TYPE = 'filesystem'
-SESSION_PERMANENT = True
-
-# Development configuration
-DEBUG = os.getenv('FLASK_ENV') == 'development'
+class Config:
+    """Base configuration."""
+    # Flask
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'your-secret-key')
+    
+    # Database
+    if os.environ.get('VERCEL_ENV') == 'production':
+        # Use SQLite Cloud in production
+        SQLALCHEMY_DATABASE_URI = 'sqlitecloud://nujaxhhmhk.sqlite.cloud:8860?apikey=qoGc7qTB8j3ojaVCn1MPCxi1BfXwpSpFuj1Tl59AoyM'
+    else:
+        # Use local SQLite in development
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///covenant.db'
+    
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Auth0
+    AUTH0_CLIENT_ID = 'zEae26bd-e2b5-4e39-ad92-68561f8b2c3f'
+    AUTH0_CLIENT_SECRET = 'F0aa7a3d-059f-4670-bbed-dba9f705db29'
+    AUTH0_DOMAIN = 'dev-g2tm040xls02bsce.us.auth0.com'
+    AUTH0_BASE_URL = f'https://{AUTH0_DOMAIN}'
+    AUTH0_AUDIENCE = 'authenticated'
+    
+    # Session config
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
+    SESSION_TYPE = 'filesystem'
+    SESSION_PERMANENT = True
+    
+    # Upload config
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
+    UPLOAD_FOLDER = 'uploads'
+    
+    # Cloudinary config
+    CLOUDINARY_CLOUD_NAME = "dhynqvbzt"
+    CLOUDINARY_API_KEY = "346739971683127"
+    CLOUDINARY_API_SECRET = "ZbFLtzXDj8r2_dLoCv6BRnW1E6E"
