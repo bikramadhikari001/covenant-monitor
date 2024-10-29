@@ -8,12 +8,11 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'your-secret-key')
     
     # Database
-    if os.environ.get('VERCEL_ENV') == 'production':
-        # Use SQLite Cloud in production
-        SQLALCHEMY_DATABASE_URI = 'sqlite+sqlitecloud://nujaxhhmhk.sqlite.cloud:8860/covenant?apikey=qoGc7qTB8j3ojaVCn1MPCxi1BfXwpSpFuj1Tl59AoyM'
-    else:
-        # Use local SQLite in development
-        SQLALCHEMY_DATABASE_URI = 'sqlite:///covenant.db'
+    # Default to SQLite Cloud in production (Vercel), local SQLite for development
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        'DATABASE_URL',
+        'sqlite+sqlitecloud://nujaxhhmhk.sqlite.cloud:8860/covenant?apikey=qoGc7qTB8j3ojaVCn1MPCxi1BfXwpSpFuj1Tl59AoyM'
+    ) if os.environ.get('VERCEL') else 'sqlite:///covenant.db'
     
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
