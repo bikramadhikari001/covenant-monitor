@@ -6,8 +6,7 @@
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
-        "runtime": "python3.12",
-        "pip": ["sqlalchemy-sqlitecloud", "sqlitecloud"]
+        "runtime": "python3.12"
       }
     }
   ],
@@ -21,7 +20,6 @@
     "VERCEL": "1",
     "FLASK_ENV": "production",
     "FLASK_APP": "app.py",
-    "DATABASE_URL": "sqlite+sqlitecloud://nujaxhhmhk.sqlite.cloud:8860/covenant?apikey=qoGc7qTB8j3ojaVCn1MPCxi1BfXwpSpFuj1Tl59AoyM"
-  },
-  "buildCommand": "mkdir -p instance uploads"
+    "DATABASE_URL": "sqlite:////tmp/covenant.db"
+  }
 }
