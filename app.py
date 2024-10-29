@@ -44,6 +44,13 @@ def create_app():
     # Initialize database
     print("Initializing database")
     db.init_app(app)
+    
+    # Create database tables
+    with app.app_context():
+        print("Creating database tables")
+        db.create_all()
+        print("Database tables created")
+    
     print("Database initialized")
     
     # Initialize migrations
