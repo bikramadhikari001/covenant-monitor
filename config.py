@@ -10,7 +10,7 @@ class Config:
     # Database
     if os.environ.get('VERCEL_ENV') == 'production':
         # Use SQLite Cloud in production
-        SQLALCHEMY_DATABASE_URI = 'sqlitecloud://nujaxhhmhk.sqlite.cloud:8860?apikey=qoGc7qTB8j3ojaVCn1MPCxi1BfXwpSpFuj1Tl59AoyM'
+        SQLALCHEMY_DATABASE_URI = 'sqlite+sqlitecloud://nujaxhhmhk.sqlite.cloud:8860/covenant?apikey=qoGc7qTB8j3ojaVCn1MPCxi1BfXwpSpFuj1Tl59AoyM'
     else:
         # Use local SQLite in development
         SQLALCHEMY_DATABASE_URI = 'sqlite:///covenant.db'
