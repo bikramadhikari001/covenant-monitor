@@ -122,8 +122,3 @@ app = create_app()
 if __name__ == '__main__':
     print("Running in development mode")
     app.run(host='0.0.0.0', port=8080, debug=True)
-
-# For Vercel serverless deployment
-def handler(event, context):
-    """Handle serverless function requests."""
-    return app.wsgi_app
