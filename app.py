@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from flask import Flask, render_template, session, redirect, url_for
 from flask_migrate import Migrate
 from authlib.integrations.flask_client import OAuth
+from sqlalchemy.dialects import registry
 from src.models.database import db
 from src.routes.document import document_bp
 from src.routes.dashboard import dashboard_bp
@@ -41,10 +42,23 @@ def create_app():
     print("Configuration loaded successfully")
     print(f"Database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
     
+    # Register SQLite Cloud dialect
+    try:
+        print("Registering SQLite Cloud dialect")
+        registry.register('sqlite.sqlitecloud', 'sqlalchemy_sqlitecloud.dialect', 'SQLiteCloudDialect')
+        print("SQLite Cloud dialect registered successfully")
+    except Exception as e:
+        print(f"Error registering SQLite Cloud dialect: {str(e)}")
+        raise
+    
     # Initialize database
     print("Initializing database")
-    db.init_app(app)
-    print("Database initialized")
+    try:
+        db.init_app(app)
+        print("Database initialized")
+    except Exception as e:
+        print(f"Error initializing database: {str(e)}")
+        raise
     
     # Initialize migrations
     Migrate(app, db)
