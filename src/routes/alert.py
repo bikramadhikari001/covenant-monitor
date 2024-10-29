@@ -60,7 +60,7 @@ def alerts():
     user_id = session['user'].get('sub')
     active_alerts = Alert.query.filter_by(
         user_id=user_id,
-        is_active=True
+        status='new'
     ).order_by(Alert.created_at.desc()).all()
     
     return render_template('alerts.html', alerts=active_alerts)
@@ -79,7 +79,7 @@ def analyze_alert(covenant_id):
             # Create or update alert with analysis
             alert = Alert.query.filter_by(
                 covenant_id=covenant_id,
-                is_active=True
+                status='new'
             ).first()
             
             if not alert:
@@ -125,7 +125,8 @@ def dismiss_alert(alert_id):
     
     try:
         resolution_notes = request.json.get('notes', '')
-        alert.resolve(resolution_notes)
+        alert.status = 'resolved'
+        db.session.commit()
         
         return jsonify({
             'status': 'success',
@@ -152,7 +153,7 @@ def alert_summary():
             db.func.count(Alert.id)
         ).filter_by(
             user_id=user_id,
-            is_active=True
+            status='new'
         ).group_by(Alert.alert_type).all()
         
         # Get recent alert history

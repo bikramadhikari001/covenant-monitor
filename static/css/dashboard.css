@@ -1,8 +1,8 @@
 /* Dashboard specific styles */
 .dashboard-container {
     max-width: var(--container-max-width);
-    margin: 32px auto;
-    padding: 0 24px;
+    margin: 0 auto;
+    padding: calc(var(--navbar-height) + 32px) 24px 24px;
 }
 
 .dashboard-section {
@@ -237,8 +237,7 @@
 
 @media (max-width: 768px) {
     .dashboard-container {
-        margin: 16px auto;
-        padding: 0 16px;
+        padding: calc(var(--navbar-height) + 16px) 16px 16px;
     }
 
     .dashboard-section {

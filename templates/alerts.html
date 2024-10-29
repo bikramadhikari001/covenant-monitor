@@ -26,7 +26,7 @@
                 <p class="alert-message">{{ alert.message }}</p>
                 <div class="alert-meta">
                     <span class="alert-time">{{ alert.created_at|datetime }}</span>
-                    <a href="{{ url_for('document_bp.view_document', id=alert.covenant.document_id) }}" 
+                    <a href="{{ url_for('document_bp.process', document_id=alert.covenant.document_id) }}" 
                        class="view-document-link">View Document</a>
                 </div>
             </div>

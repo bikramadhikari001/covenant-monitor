@@ -7,6 +7,7 @@ Werkzeug==3.0.1
 SQLAlchemy>=1.4.0
 alembic==1.13.1
 gunicorn==21.2.0
+sqlalchemy-sqlitecloud
 
 # Authentication
 Authlib==1.3.0

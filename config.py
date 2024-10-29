@@ -8,15 +8,20 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'your-secret-key')
     
     # Database
-    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI', 'sqlite:///covenant.db')
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    if DATABASE_URL:
+        SQLALCHEMY_DATABASE_URI = DATABASE_URL
+    else:
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///covenant.db'
+    
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Auth0
-    AUTH0_CLIENT_ID = 'zEae26bd-e2b5-4e39-ad92-68561f8b2c3f'
-    AUTH0_CLIENT_SECRET = 'F0aa7a3d-059f-4670-bbed-dba9f705db29'
-    AUTH0_DOMAIN = 'dev-g2tm040xls02bsce.us.auth0.com'
+    AUTH0_CLIENT_ID = os.environ.get('AUTH0_CLIENT_ID')
+    AUTH0_CLIENT_SECRET = os.environ.get('AUTH0_CLIENT_SECRET')
+    AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN', 'dev-g2tm040xls02bsce.us.auth0.com')
     AUTH0_BASE_URL = f'https://{AUTH0_DOMAIN}'
-    AUTH0_AUDIENCE = 'authenticated'
+    AUTH0_AUDIENCE = os.environ.get('AUTH0_AUDIENCE', 'authenticated')
     
     # Session config
     PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
@@ -28,6 +33,6 @@ class Config:
     UPLOAD_FOLDER = 'uploads'
     
     # Cloudinary config
-    CLOUDINARY_CLOUD_NAME = "dhynqvbzt"
-    CLOUDINARY_API_KEY = "346739971683127"
-    CLOUDINARY_API_SECRET = "ZbFLtzXDj8r2_dLoCv6BRnW1E6E"
+    CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
+    CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY')
+    CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')

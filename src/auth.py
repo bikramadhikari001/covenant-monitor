@@ -1,6 +1,6 @@
 """Authentication configuration and utilities."""
 from functools import wraps
-from flask import session, redirect, url_for
+from flask import session, redirect, url_for, current_app
 from authlib.integrations.flask_client import OAuth
 
 oauth = OAuth()
@@ -31,5 +31,12 @@ def requires_auth(f):
     def decorated(*args, **kwargs):
         if 'user' not in session:
             return redirect(url_for('auth_bp.login'))
+        
+        # Check if user session has the required sub field
+        if not session.get('user', {}).get('sub'):
+            current_app.logger.error("User session missing sub field")
+            session.clear()
+            return redirect(url_for('auth_bp.login'))
+            
         return f(*args, **kwargs)
     return decorated

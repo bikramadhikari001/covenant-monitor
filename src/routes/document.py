@@ -1,8 +1,9 @@
 """Document routes module."""
-from flask import Blueprint, request, jsonify, render_template, current_app, redirect, url_for
+from flask import Blueprint, request, jsonify, render_template, current_app, redirect, url_for, session
 from werkzeug.utils import secure_filename
 from src.models.database import db, Document, Project, Covenant
 from src.document_processor.processor import DocumentProcessor
+from src.auth import requires_auth
 from datetime import datetime
 import logging
 import os
@@ -39,6 +40,7 @@ def ensure_upload_dir():
     return upload_dir
 
 @document_bp.route('/upload', methods=['GET', 'POST'])
+@requires_auth
 def upload():
     """Handle document upload"""
     if request.method == 'GET':
@@ -64,7 +66,7 @@ def upload():
         
         file = request.files['file']
         project_id = request.form.get('project_id')
-        user_id = request.form.get('user_id')
+        user_id = session['user']['sub']
         
         logger.debug(f"File: {file}")
         logger.debug(f"Project ID: {project_id}")
@@ -130,21 +132,25 @@ def upload():
                               error='Failed to upload document'))
 
 @document_bp.route('/process/<int:document_id>')
+@requires_auth
 def process(document_id):
     """Display document processing page"""
     document = Document.query.get_or_404(document_id)
     return render_template('process.html', document=document)
 
 @document_bp.route('/projects', methods=['GET', 'POST'])
+@requires_auth
 def projects():
     """Handle project creation and listing"""
+    user_id = session['user']['sub']
+    logger.debug(f"User ID from session: {user_id}")
+    
     if request.method == 'POST':
         try:
             name = request.form.get('name')
             description = request.form.get('description')
-            user_id = request.form.get('user_id')
 
-            if not name or not user_id:
+            if not name:
                 return jsonify({'error': 'Missing required fields'}), 400
 
             project = Project(
@@ -163,10 +169,12 @@ def projects():
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
 
-    projects = Project.query.all()
+    # Only show projects belonging to the logged-in user
+    projects = Project.query.filter_by(user_id=user_id).all()
     return render_template('projects.html', projects=projects)
 
 @document_bp.route('/project/<int:project_id>')
+@requires_auth
 def project_detail(project_id):
     """Display project details"""
     project = Project.query.get_or_404(project_id)
@@ -185,6 +193,7 @@ def project_detail(project_id):
                          covenant_count=covenant_count)
 
 @document_bp.route('/project/<int:project_id>/delete', methods=['POST'])
+@requires_auth
 def delete_project(project_id):
     """Delete a project"""
     try:
@@ -205,6 +214,7 @@ def delete_project(project_id):
         return jsonify({'error': str(e)}), 500
 
 @document_bp.route('/project/<int:project_id>/configure-database', methods=['POST'])
+@requires_auth
 def configure_database(project_id):
     """Configure database connection for a project"""
     try:

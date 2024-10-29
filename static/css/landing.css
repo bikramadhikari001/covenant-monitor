@@ -1,7 +1,6 @@
 /* Landing Page Styles */
 .landing-container {
     width: 100%;
-    margin-top: -64px;  /* Offset navbar height */
 }
 
 /* Hero Section */
@@ -12,7 +11,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 64px;
     position: relative;
     overflow: hidden;
 }
@@ -32,7 +30,7 @@
     width: 100%;
     max-width: 1400px;
     text-align: center;
-    padding: 80px 24px;
+    padding: 120px 24px 80px;
     position: relative;
     z-index: 1;
 }
@@ -78,6 +76,27 @@
     justify-content: center;
     margin-bottom: 64px;
     animation: fadeInUp 1s ease 0.4s both;
+}
+
+.hero-cta .btn {
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.hero-cta .btn-primary {
+    background: var(--secondary-color);
+    color: var(--white);
+}
+
+.hero-cta .btn-outline {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--white);
+}
+
+.hero-cta .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .hero-stats {
@@ -290,6 +309,22 @@
     display: flex;
     gap: 16px;
     justify-content: center;
+}
+
+.cta-buttons .btn {
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.cta-buttons .btn-outline {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--white);
+}
+
+.cta-buttons .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 /* Animations */
