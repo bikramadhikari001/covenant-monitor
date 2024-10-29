@@ -3,7 +3,11 @@
   "builds": [
     {
       "src": "app.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb",
+        "runtime": "python3.9"
+      }
     }
   ],
   "routes": [
@@ -14,6 +18,8 @@
   ],
   "env": {
     "VERCEL": "1",
-    "SQLALCHEMY_DATABASE_URI": "sqlite+sqlitecloud://nujaxhhmhk.sqlite.cloud:8860/covenant?apikey=qoGc7qTB8j3ojaVCn1MPCxi1BfXwpSpFuj1Tl59AoyM"
+    "SQLALCHEMY_DATABASE_URI": "sqlite+sqlitecloud://nujaxhhmhk.sqlite.cloud:8860/covenant?apikey=qoGc7qTB8j3ojaVCn1MPCxi1BfXwpSpFuj1Tl59AoyM",
+    "FLASK_ENV": "production",
+    "FLASK_APP": "app.py"
   }
 }
