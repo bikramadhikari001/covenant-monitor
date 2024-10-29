@@ -14,6 +14,7 @@ class DocumentProcessor:
         self.file_path = file_path
         self.user_id = user_id
         self.project_id = project_id
+        self.file_url = None  # Will be set by the document route
         
     def process_and_store(self):
         """Process document and store results."""
@@ -21,19 +22,20 @@ class DocumentProcessor:
             # Mock processing for now
             logger.info("Using mock parser")
             
-            # Create document record
+            # Create document record with JSON string for metadata
             document = Document(
                 project_id=self.project_id,
                 filename=self.file_path.split('/')[-1],
+                file_url=self.file_url,  # Use the file_url passed from the route
                 upload_date=datetime.utcnow(),
                 user_id=self.user_id,
                 document_type='loan_agreement',
-                doc_metadata={
+                doc_metadata=json.dumps({
                     'document_type': 'loan_agreement',
                     'parties': ['TECH INNOVATIONS INC.', 'FIRST NATIONAL BANK', 'THE LENDERS'],
                     'processed_at': datetime.utcnow().isoformat(),
                     'effective_date': datetime.utcnow().strftime('%Y-%m-%d')
-                },
+                }),
                 processing_status='pending'
             )
             db.session.add(document)
@@ -94,7 +96,11 @@ class DocumentProcessor:
                     description=covenant_data['description'],
                     threshold_value=covenant_data['threshold_value'],
                     current_value=covenant_data['current_value'],
-                    measurement_frequency=covenant_data['measurement_frequency']
+                    measurement_frequency=covenant_data['measurement_frequency'],
+                    covenant_metadata=json.dumps({
+                        'measurement_frequency': covenant_data['measurement_frequency'],
+                        'last_updated': datetime.utcnow().isoformat()
+                    })
                 )
                 covenant.update_compliance_status()
                 db.session.add(covenant)
@@ -110,13 +116,13 @@ class DocumentProcessor:
                         user_id=self.user_id,
                         alert_type=covenant.compliance_status,
                         message=f"{covenant.name} is in {covenant.compliance_status} status. Current value: {covenant.current_value}, Threshold: {covenant.threshold_value}",
-                        details={
+                        details=json.dumps({
                             'covenant_name': covenant.name,
                             'current_value': covenant.current_value,
                             'threshold_value': covenant.threshold_value,
                             'measurement_frequency': covenant.measurement_frequency,
-                            'last_updated': None
-                        }
+                            'last_updated': datetime.utcnow().isoformat()
+                        })
                     )
                     db.session.add(alert)
             

@@ -5,154 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Covenant Monitor{% endblock %}</title>
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Base styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modals.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    
+    <!-- Page specific styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/projects.css') }}">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
-    <!-- Base CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    
-    <!-- Page-specific CSS -->
-    {% if request.endpoint == 'index' %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
-    {% elif 'dashboard' in request.endpoint %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-    {% endif %}
-    
+    <!-- Additional CSS -->
     {% block extra_css %}{% endblock %}
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="navbar-content">
-            <div class="navbar-left">
-                <a href="{{ url_for('index') }}" class="navbar-brand">
-                    <i class="fas fa-chart-line"></i>
-                    Covenant Monitor
-                </a>
-            </div>
-            
-            {% if 'user' in session %}
-            <div class="navbar-center">
-                <a href="{{ url_for('dashboard_bp.dashboard') }}" class="nav-link">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a>
-                <button class="nav-button" onclick="showNewProjectModal()">
-                    <i class="fas fa-plus"></i> New Project
-                </button>
-                <a href="{{ url_for('alert_bp.alerts') }}" class="nav-link">
-                    <i class="fas fa-bell"></i> Alerts
-                    {% if alert_count %}
-                    <span class="alert-badge">{{ alert_count }}</span>
-                    {% endif %}
-                </a>
-            </div>
-            
-            <div class="navbar-right">
-                <div class="dropdown">
-                    <button class="dropdown-toggle">
-                        <i class="fas fa-user-circle fa-lg"></i>
-                        <span class="profile-name">{{ session['user'].get('name', 'User') }}</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a href="{{ url_for('auth_bp.settings') }}" class="dropdown-item">
-                            <i class="fas fa-cog"></i> Settings
-                        </a>
-                        <a href="{{ url_for('auth_bp.logout') }}" class="dropdown-item">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% else %}
-            <div class="navbar-right">
-                <a href="{{ url_for('auth_bp.login') }}" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </a>
-            </div>
-            {% endif %}
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
-                            {{ message }}
-                            <button type="button" class="close-alert">&times;</button>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-        
+    {% include 'partials/navbar.html' %}
+    
+    <div class="main-content">
         {% block content %}{% endblock %}
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-left">
-                &copy; {{ now.year }} Covenant Monitor. All rights reserved.
-            </div>
-            <div class="footer-right">
-                <a href="#" class="footer-link">Privacy Policy</a>
-                <a href="#" class="footer-link">Terms of Service</a>
-                <a href="#" class="footer-link">Contact</a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- New Project Modal -->
-    <div id="newProjectModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Create New Project</h2>
-                <button class="close-modal" onclick="hideNewProjectModal()">×</button>
-            </div>
-            
-            <form method="post" action="{{ url_for('document_bp.projects') }}" class="modal-form">
-                <div class="form-group">
-                    <label for="projectName">Project Name</label>
-                    <input type="text" id="projectName" name="name" required
-                           placeholder="Enter project name">
-                </div>
-                
-                <div class="form-group">
-                    <label for="projectDescription">Description</label>
-                    <textarea id="projectDescription" name="description" rows="4"
-                              placeholder="Enter project description"></textarea>
-                </div>
-                
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-outline" onclick="hideNewProjectModal()">
-                        Cancel
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        Create Project
-                    </button>
-                </div>
-            </form>
-        </div>
     </div>
-
-    <!-- Base JavaScript -->
+    
+    {% include 'partials/footer.html' %}
+    
+    <!-- Base scripts -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modals.js') }}"></script>
     
-    <!-- Page-specific JavaScript -->
-    {% if request.endpoint == 'index' %}
-    <script src="{{ url_for('static', filename='js/landing.js') }}"></script>
-    {% elif 'dashboard' in request.endpoint %}
-    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-    {% endif %}
-    
+    <!-- Additional JavaScript -->
     {% block extra_js %}{% endblock %}
 </body>
 </html>

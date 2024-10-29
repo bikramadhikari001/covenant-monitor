@@ -1,0 +1,53 @@
+/* Base Variables */
+:root {
+    /* Colors */
+    --primary-color: #1a365d;
+    --primary-light: #2c5282;
+    --secondary-color: #48bb78;
+    --background-color: #f7fafc;
+    --white: #ffffff;
+    --text-dark: #2d3748;
+    --text-light: #4a5568;
+    --error: #e53e3e;
+    --warning: #dd6b20;
+    --success: #38a169;
+    --border-color: #e2e8f0;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    
+    /* Layout */
+    --navbar-height: 56px;
+    --container-max-width: 1400px;
+}
+
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.5;
+    color: var(--text-dark);
+    background-color: var(--background-color);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    line-height: 1.2;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}

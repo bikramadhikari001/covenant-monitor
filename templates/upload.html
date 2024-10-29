@@ -1,55 +1,35 @@
 {% extends "base.html" %}
 
-{% block title %}Upload Document - Covenant Monitor{% endblock %}
+{% block title %}Upload Document - {{ project.name }}{% endblock %}
 
 {% block content %}
 <div class="upload-container">
-    <div class="upload-card">
-        <h1>Upload Document</h1>
-        <p class="upload-description">Upload your loan agreements or bond documents for covenant extraction.</p>
-        
-        <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
-            {% if not project_id %}
-            <div class="form-group">
-                <label for="project">Select Project</label>
-                <select name="project_id" id="project" class="form-select" required>
-                    <option value="">Choose a project...</option>
-                    {% for project in projects %}
-                    <option value="{{ project.id }}">{{ project.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            {% else %}
-            <input type="hidden" name="project_id" value="{{ project_id }}">
-            {% endif %}
+    <h1>Upload Document</h1>
+    <p class="upload-description">Upload your loan agreements or bond documents for covenant extraction.</p>
+
+    <div class="upload-box">
+        <form method="POST" action="{{ url_for('document_bp.upload') }}" enctype="multipart/form-data" class="upload-form">
+            <input type="hidden" name="project_id" value="{{ project.id }}">
+            <input type="hidden" name="user_id" value="{{ session.user.id }}">
             
-            <div class="file-upload-area" id="dropZone">
-                <input type="file" name="file" id="file" class="file-input" accept=".pdf,.doc,.docx" required>
+            <div class="file-upload-container">
                 <div class="upload-icon">
                     <i class="fas fa-cloud-upload-alt"></i>
                 </div>
-                <div class="upload-text">
-                    <p>Drag and drop your file here or</p>
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('file').click()">
-                        Browse Files
-                    </button>
-                </div>
+                <p>Select a file to upload</p>
+                <input type="file" 
+                       id="fileInput" 
+                       name="file" 
+                       accept=".pdf,.doc,.docx" 
+                       class="file-input"
+                       required>
                 <p class="file-info">Maximum file size: 16MB</p>
-                <p class="file-types">Supported formats: PDF, DOC, DOCX</p>
+                <p class="file-info">Supported formats: PDF, DOC, DOCX</p>
             </div>
-            
-            <div id="filePreview" class="file-preview" style="display: none;">
-                <div class="selected-file">
-                    <i class="fas fa-file-alt"></i>
-                    <span id="fileName">No file selected</span>
-                    <button type="button" class="btn-remove" onclick="removeFile()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <button type="submit" class="btn btn-primary upload-button">
-                <i class="fas fa-upload"></i> Upload Document
+
+            <button type="submit" class="btn btn-primary upload-btn">
+                <i class="fas fa-upload"></i>
+                Upload Document
             </button>
         </form>
     </div>
@@ -61,136 +41,82 @@
 .upload-container {
     max-width: 800px;
     margin: 40px auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
-.upload-card {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 40px;
-    box-shadow: var(--shadow-sm);
-}
-
-.upload-card h1 {
+.upload-container h1 {
     font-size: 32px;
-    margin-bottom: 16px;
+    font-weight: 600;
     color: var(--text-dark);
+    margin-bottom: 16px;
 }
 
 .upload-description {
     color: var(--text-light);
+    font-size: 16px;
     margin-bottom: 32px;
 }
 
-.form-group {
-    margin-bottom: 24px;
+.upload-box {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-}
-
-.form-select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    color: var(--text-dark);
-}
-
-.file-upload-area {
-    border: 2px dashed #ddd;
+.file-upload-container {
+    border: 2px dashed var(--border-color);
     border-radius: 12px;
-    padding: 40px;
+    padding: 48px 24px;
     text-align: center;
-    position: relative;
-    transition: all var(--transition-normal);
     margin-bottom: 24px;
-}
-
-.file-upload-area.dragover {
-    border-color: var(--primary-color);
-    background: rgba(44, 82, 130, 0.05);
-}
-
-.file-input {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
+    background: var(--background-color);
 }
 
 .upload-icon {
     font-size: 48px;
-    color: var(--primary-color);
-    margin-bottom: 16px;
-}
-
-.upload-text {
-    margin-bottom: 16px;
-}
-
-.upload-text p {
-    margin-bottom: 8px;
     color: var(--text-light);
+    margin-bottom: 16px;
 }
 
-.file-info,
-.file-types {
+.file-upload-container p {
+    color: var(--text-light);
+    margin-bottom: 16px;
+}
+
+.file-input {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: white;
+}
+
+.file-info {
     font-size: 14px;
     color: var(--text-light);
-    margin: 4px 0;
+    margin-top: 16px;
 }
 
-.file-preview {
-    background: var(--background-color);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 24px;
-}
-
-.selected-file {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.selected-file i {
-    font-size: 24px;
-    color: var(--primary-color);
-}
-
-.btn-remove {
-    background: none;
-    border: none;
-    color: var(--text-light);
-    cursor: pointer;
-    padding: 4px;
-    margin-left: auto;
-}
-
-.btn-remove:hover {
-    color: var(--error);
-}
-
-.upload-button {
+.upload-btn {
     width: 100%;
+    justify-content: center;
 }
 
 @media (max-width: 768px) {
     .upload-container {
-        margin: 20px auto;
+        margin: 24px auto;
     }
-    
-    .upload-card {
+
+    .upload-box {
         padding: 24px;
     }
-    
-    .file-upload-area {
-        padding: 24px;
+
+    .file-upload-container {
+        padding: 32px 16px;
     }
 }
 </style>
@@ -198,58 +124,26 @@
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('uploadForm');
-    if (!form) return;  // Exit if form doesn't exist
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    const file = this.files[0];
+    if (!file) return;
+
+    // Check file type
+    const allowedTypes = ['.pdf', '.doc', '.docx'];
+    const fileExt = '.' + file.name.split('.').pop().toLowerCase();
     
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('file');
-    const filePreview = document.getElementById('filePreview');
-    const fileName = document.getElementById('fileName');
-    
-    if (dropZone && fileInput) {  // Only add listeners if elements exist
-        // Handle drag and drop
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
-        
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
-        });
-        
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            
-            if (e.dataTransfer.files.length) {
-                fileInput.files = e.dataTransfer.files;
-                updateFilePreview();
-            }
-        });
-        
-        // Handle file selection
-        fileInput.addEventListener('change', updateFilePreview);
+    if (!allowedTypes.includes(fileExt)) {
+        alert('Please select a PDF, DOC, or DOCX file.');
+        this.value = '';
+        return;
     }
     
-    function updateFilePreview() {
-        if (fileInput.files.length && filePreview && fileName) {
-            fileName.textContent = fileInput.files[0].name;
-            filePreview.style.display = 'block';
-        } else if (filePreview) {
-            filePreview.style.display = 'none';
-        }
+    // Check file size (16MB)
+    if (file.size > 16 * 1024 * 1024) {
+        alert('File size must be less than 16MB.');
+        this.value = '';
+        return;
     }
 });
-
-function removeFile() {
-    const fileInput = document.getElementById('file');
-    const filePreview = document.getElementById('filePreview');
-    
-    if (fileInput && filePreview) {
-        fileInput.value = '';
-        filePreview.style.display = 'none';
-    }
-}
 </script>
 {% endblock %}

@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'dev')
 # Database
 SQLALCHEMY_DATABASE_URI = os.getenv(
     'DATABASE_URL',
-    f'sqlite:///{os.path.join(BASE_DIR, "covenant.db")}'
+    f'sqlite:///{os.path.join(BASE_DIR, "instance", "covenant.db")}'
 )
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 

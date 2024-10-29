@@ -8,6 +8,12 @@
     <section class="dashboard-section">
         <div class="section-header">
             <h2>Projects</h2>
+            {% if projects %}
+            <button class="btn btn-primary" data-modal="newProjectModal">
+                <i class="fas fa-plus"></i>
+                Create Project
+            </button>
+            {% endif %}
         </div>
         
         {% if projects %}
@@ -39,7 +45,7 @@
             </div>
             <h3>No Projects Yet</h3>
             <p>Create your first project to start monitoring covenants.</p>
-            <button onclick="showNewProjectModal()" class="btn btn-primary">
+            <button class="btn btn-primary" data-modal="newProjectModal">
                 <i class="fas fa-plus"></i>
                 Create Project
             </button>
@@ -47,8 +53,32 @@
         {% endif %}
     </section>
 
+    <!-- New Project Modal -->
+    <div id="newProjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Project</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="newProjectForm" class="modal-form" action="{{ url_for('document_bp.projects') }}" method="POST">
+                <div class="form-group">
+                    <label for="projectName">Project Name</label>
+                    <input type="text" id="projectName" name="name" placeholder="Enter project name" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectDescription">Description</label>
+                    <textarea id="projectDescription" name="description" placeholder="Enter project description" rows="4"></textarea>
+                </div>
+                <input type="hidden" name="user_id" value="{{ session.user.id }}">
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Create Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Overview Section -->
-    <section class="dashboard-section overview-section">
+    <section class="dashboard-section">
         <div class="section-header">
             <h2>Overview</h2>
             <div class="date-range">
@@ -58,7 +88,7 @@
                 <button class="btn btn-outline">Quarter</button>
             </div>
         </div>
-        <div class="overview-grid">
+        <div class="overview-stats">
             <div class="stat-card">
                 <div class="stat-icon success">
                     <i class="fas fa-check-circle"></i>
@@ -153,130 +183,4 @@
         </div>
     </section>
 </div>
-{% endblock %}
-
-{% block extra_css %}
-<style>
-.dashboard-container {
-    max-width: var(--container-max-width);
-    margin: 40px auto;
-    padding: 0 24px;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-}
-
-.section-header h2 {
-    font-size: 24px;
-    color: var(--text-dark);
-}
-
-.empty-state {
-    text-align: center;
-    padding: 48px;
-    background: var(--white);
-    border-radius: 12px;
-    box-shadow: var(--shadow-sm);
-}
-
-.empty-icon {
-    width: 64px;
-    height: 64px;
-    background: var(--background-color);
-    border-radius: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 16px;
-    font-size: 32px;
-    color: var(--text-light);
-}
-
-.empty-state h3 {
-    font-size: 20px;
-    margin-bottom: 8px;
-    color: var(--text-dark);
-}
-
-.empty-state p {
-    color: var(--text-light);
-    margin-bottom: 24px;
-}
-
-.project-card {
-    background: var(--white);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: var(--shadow-sm);
-    transition: transform var(--transition-normal);
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-
-.project-card:hover {
-    transform: translateY(-2px);
-}
-
-.project-header {
-    margin-bottom: 16px;
-}
-
-.project-header h3 {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 4px;
-}
-
-.project-date {
-    font-size: 14px;
-    color: var(--text-light);
-}
-
-.project-description {
-    color: var(--text-light);
-    margin-bottom: 24px;
-    line-height: 1.6;
-}
-
-.project-stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    padding: 16px;
-    background: var(--background-color);
-    border-radius: 8px;
-}
-
-.stat-item {
-    text-align: center;
-}
-
-.stat-label {
-    font-size: 14px;
-    color: var(--text-light);
-    margin-bottom: 4px;
-}
-
-.stat-value {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--text-dark);
-}
-
-@media (max-width: 768px) {
-    .project-card {
-        margin-bottom: 16px;
-    }
-    
-    .project-stats {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
 {% endblock %}

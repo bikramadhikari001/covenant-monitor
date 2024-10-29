@@ -2,6 +2,10 @@
 
 {% block title %}Covenant Monitor - AI-Powered Financial Compliance{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="landing-container">
     <!-- Hero Section -->
@@ -119,4 +123,8 @@
         </div>
     </section>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/landing.js') }}"></script>
 {% endblock %}

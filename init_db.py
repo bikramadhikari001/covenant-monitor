@@ -1,9 +1,10 @@
 """Initialize the database."""
 from flask import Flask
-from src.models.database import db, Document, Covenant, Alert
+from src.models.database import db, Project, Document, Covenant, Alert
 import os
 import sqlite3
 import stat
+from datetime import datetime
 
 def init_database():
     """Initialize the database with tables."""
@@ -36,19 +37,79 @@ def init_database():
     db.init_app(app)
     
     with app.app_context():
+        # Drop all tables if they exist
+        print("Dropping existing tables...")
+        db.drop_all()
+        
         # Create all tables
         print("Creating database tables...")
         db.create_all()
         
-        # Set database file permissions
-        os.chmod(db_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP)
-        
-        # Verify schema using SQLite directly
-        print("\nVerifying database schema...")
+        # Create tables directly with SQLite to ensure proper schema
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         
-        # Get table info
+        # Create Project table
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS project (
+            id INTEGER PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            description TEXT,
+            user_id VARCHAR(50) NOT NULL,
+            created_at DATETIME
+        )
+        """)
+        
+        # Create Document table
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS document (
+            id INTEGER PRIMARY KEY,
+            project_id INTEGER NOT NULL,
+            filename VARCHAR(255) NOT NULL,
+            file_url VARCHAR(500) NOT NULL,
+            upload_date DATETIME,
+            user_id VARCHAR(50) NOT NULL,
+            document_type VARCHAR(50),
+            doc_metadata TEXT,
+            processing_status VARCHAR(20),
+            FOREIGN KEY(project_id) REFERENCES project(id)
+        )
+        """)
+        
+        # Create Covenant table
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS covenant (
+            id INTEGER PRIMARY KEY,
+            document_id INTEGER NOT NULL,
+            name VARCHAR(100) NOT NULL,
+            description TEXT,
+            threshold FLOAT,
+            current_value FLOAT,
+            status VARCHAR(20),
+            last_checked DATETIME,
+            covenant_metadata TEXT,
+            FOREIGN KEY(document_id) REFERENCES document(id)
+        )
+        """)
+        
+        # Create Alert table
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS alert (
+            id INTEGER PRIMARY KEY,
+            covenant_id INTEGER NOT NULL,
+            type VARCHAR(50) NOT NULL,
+            message TEXT NOT NULL,
+            created_at DATETIME,
+            status VARCHAR(20),
+            alert_metadata TEXT,
+            FOREIGN KEY(covenant_id) REFERENCES covenant(id)
+        )
+        """)
+        
+        conn.commit()
+        
+        # Verify schema
+        print("\nVerifying database schema...")
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tables = cursor.fetchall()
         print(f"Created tables: {', '.join(table[0] for table in tables)}")
@@ -61,6 +122,10 @@ def init_database():
             print(f"  {col[1]} ({col[2]})")
         
         conn.close()
+        
+        # Set database file permissions
+        os.chmod(db_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP)
+        
         print("\nDatabase initialized successfully!")
         print(f"Database location: {db_path}")
         print(f"Database permissions: {oct(os.stat(db_path).st_mode)[-3:]}")
