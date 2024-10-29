@@ -45,6 +45,8 @@ def create_app():
     # Register SQLite Cloud dialect
     try:
         print("Registering SQLite Cloud dialect")
+        import sqlitecloud
+        import sqlalchemy_sqlitecloud
         registry.register('sqlite.sqlitecloud', 'sqlalchemy_sqlitecloud.dialect', 'SQLiteCloudDialect')
         print("SQLite Cloud dialect registered successfully")
     except Exception as e:
