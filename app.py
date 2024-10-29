@@ -126,4 +126,4 @@ if __name__ == '__main__':
 # For Vercel serverless deployment
 def handler(event, context):
     """Handle serverless function requests."""
-    return app.handle_request()
+    return app.wsgi_app
